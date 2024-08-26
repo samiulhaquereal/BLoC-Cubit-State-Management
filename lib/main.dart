@@ -1,5 +1,9 @@
 import 'package:blocstatemanagement/cubit/counter_cubit.dart';
 import 'package:blocstatemanagement/cubit/counter_cubit_state.dart';
+import 'package:blocstatemanagement/cubit/user_cubit.dart';
+import 'package:blocstatemanagement/cubit/user_cubit_state.dart';
+import 'package:blocstatemanagement/model/user_model.dart';
+import 'package:blocstatemanagement/network/rest_api_client.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -15,7 +19,8 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
-        BlocProvider(create: (context)=> CounterCubit())
+        BlocProvider(create: (context)=> CounterCubit()),
+        BlocProvider(create: (context)=> UserCubit(restApiClient: RestApiClient())),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
@@ -46,7 +51,8 @@ class HomePage extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  FloatingActionButton(onPressed: (){
+                  FloatingActionButton(
+                      onPressed: (){
                     context.read<CounterCubit>().counterIncrease();
                   },child: Icon(Icons.add)),
                   FloatingActionButton(onPressed: (){
@@ -54,10 +60,47 @@ class HomePage extends StatelessWidget {
                   },child: Icon(Icons.remove))
                 ],
               ),
+              SizedBox(height: 20,),
+              ElevatedButton(onPressed: (){
+                Navigator.push(context, MaterialPageRoute(builder: (context)=> UserListScreen()));
+              }, child: Text('UserList'))
             ],
           ),
         ),
       )
+    ));
+  }
+}
+
+class UserListScreen extends StatelessWidget {
+  const UserListScreen({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    context.read<UserCubit>().getUserList();
+    return SafeArea(child: Scaffold(
+      body: BlocBuilder<UserCubit,UserCubitState>(
+        builder: (context,state){
+          if(state is UserCubitLoading){
+            return CircularProgressIndicator();
+          }else if(state is UserCubitError){
+            return Text(state.message.toString());
+          }else if(state is UserCubitDataLoaded){
+            return ListView.builder(
+              itemCount: state.userList.length,
+                itemBuilder: (context,index){
+                UserModel item = state.userList[index];
+              return ListTile(
+                title: Text(item.name.toString()),
+                leading: Text(item.id.toString()),
+                subtitle: Text(item.email.toString()),
+              );
+            });
+          }else{
+            return SizedBox();
+          }
+        },
+      ),
     ));
   }
 }
