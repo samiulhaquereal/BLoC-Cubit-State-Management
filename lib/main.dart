@@ -1,9 +1,11 @@
+import 'package:blocstatemanagement/bloc/counter/counter_bloc.dart';
 import 'package:blocstatemanagement/cubit/counter_cubit.dart';
 import 'package:blocstatemanagement/cubit/counter_cubit_state.dart';
 import 'package:blocstatemanagement/cubit/user_cubit.dart';
 import 'package:blocstatemanagement/cubit/user_cubit_state.dart';
 import 'package:blocstatemanagement/model/user_model.dart';
 import 'package:blocstatemanagement/network/rest_api_client.dart';
+import 'package:blocstatemanagement/view/counter_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -19,6 +21,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiBlocProvider(
       providers: [
+        BlocProvider(create: (context)=> CounterBloc()),
         BlocProvider(create: (context)=> CounterCubit()),
         BlocProvider(create: (context)=> UserCubit(restApiClient: RestApiClient())),
       ],
@@ -28,7 +31,7 @@ class MyApp extends StatelessWidget {
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           useMaterial3: true,
         ),
-        home: HomePage(),
+        home: CounterScreen(),
       ),
     );
   }
