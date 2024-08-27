@@ -1,4 +1,5 @@
 import 'package:blocstatemanagement/bloc/counter/counter_bloc.dart';
+import 'package:blocstatemanagement/bloc/switch/switch_bloc.dart';
 import 'package:blocstatemanagement/cubit/counter_cubit.dart';
 import 'package:blocstatemanagement/cubit/counter_cubit_state.dart';
 import 'package:blocstatemanagement/cubit/user_cubit.dart';
@@ -24,6 +25,7 @@ class MyApp extends StatelessWidget {
         BlocProvider(create: (context)=> CounterBloc()),
         BlocProvider(create: (context)=> CounterCubit()),
         BlocProvider(create: (context)=> UserCubit(restApiClient: RestApiClient())),
+        BlocProvider(create: (context)=> SwitchBloc())
       ],
       child: MaterialApp(
         title: 'Flutter Demo',

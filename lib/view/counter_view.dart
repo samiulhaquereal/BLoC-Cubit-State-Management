@@ -3,6 +3,7 @@ import 'package:blocstatemanagement/bloc/counter/counter_event.dart';
 import 'package:blocstatemanagement/bloc/counter/counter_state.dart';
 import 'package:blocstatemanagement/cubit/counter_cubit.dart';
 import 'package:blocstatemanagement/cubit/counter_cubit_state.dart';
+import 'package:blocstatemanagement/view/switch_view.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -32,7 +33,10 @@ class CounterScreen extends StatelessWidget {
                     },child: Icon(Icons.remove))
                   ],
                 ),
-                SizedBox(height: 20,)
+                SizedBox(height: 20,),
+                ElevatedButton(onPressed: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> SwitchScreen()));
+                }, child: Text('Switch Page'))
               ],
             ),
           ),
